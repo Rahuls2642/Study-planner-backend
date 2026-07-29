@@ -14,8 +14,19 @@ export const validate =
       });
 
       req.body = validated.body;
-      req.params = validated.params;
-      req.query = validated.query;
+      
+      // In Express 5, req.query and req.params might be getters
+      Object.defineProperty(req, 'query', {
+        value: validated.query,
+        writable: true,
+        configurable: true
+      });
+      
+      Object.defineProperty(req, 'params', {
+        value: validated.params,
+        writable: true,
+        configurable: true
+      });
 
       next();
     } catch (error) {

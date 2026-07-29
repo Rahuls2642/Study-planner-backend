@@ -27,7 +27,7 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "postgres": "^3.4.9",
-    "zod": "^4.4.3"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
