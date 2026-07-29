@@ -3,6 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import { notFound } from "./middleware/notFound";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
@@ -22,5 +24,8 @@ app.get("/", (_, res) => {
         message: "StudySync API is running",
     });
 });
+app.use(notFound);
+
+app.use(errorHandler);
 
 export default app;
