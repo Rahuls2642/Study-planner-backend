@@ -2,8 +2,8 @@ import bcrypt from "bcrypt";
 
 import { ApiError } from "@/config/utils/ApiError";
 
-import { RegisterInput } from "./auth.validation";
-import { authRepository } from "./auth.repository";
+import { RegisterInput } from "../validations/register.validation";
+import { authRepository } from "../repositories/auth.repository";
 
 export class AuthService {
     async register(data: RegisterInput) {

@@ -11,9 +11,18 @@ const envSchema = z.object({
 
     JWT_REFRESH_SECRET: z.string(),
 
-    ACCESS_TOKEN_EXPIRES_IN: z.string(),
+    ACCESS_TOKEN_EXPIRES_IN: z.enum([
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "7d",
+    ]),
 
-    REFRESH_TOKEN_EXPIRES_IN: z.string(),
+    REFRESH_TOKEN_EXPIRES_IN: z.enum([
+        "7d",
+        "30d",
+    ]),
 });
 
 export const env = envSchema.parse(process.env);
