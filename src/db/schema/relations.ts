@@ -3,6 +3,7 @@ import { relations } from "drizzle-orm";
 import { users } from "./users";
 import { sessions } from "./sessions";
 import { courses } from "./courses";
+import { syllabi } from "./syllabi";
 
 export const usersRelations = relations(users, ({ many }) => ({
     sessions: many(sessions),
@@ -21,10 +22,21 @@ export const sessionsRelations = relations(
 
 export const coursesRelations = relations(
     courses,
-    ({ one }) => ({
+    ({ one, many }) => ({
         user: one(users, {
             fields: [courses.userId],
             references: [users.id],
         }),
+        syllabi: many(syllabi),
     })
+);
+
+export const syllabiRelations = relations(
+  syllabi,
+  ({ one }) => ({
+    course: one(courses, {
+      fields: [syllabi.courseId],
+      references: [courses.id],
+    }),
+  })
 );
