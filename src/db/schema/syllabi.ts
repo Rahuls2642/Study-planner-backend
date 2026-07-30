@@ -24,7 +24,7 @@ export const syllabi = pgTable("syllabi", {
 
   storageKey: text("storage_key").notNull(),
 
-  fileUrl: text("file_url").notNull(),
+  bucket: text("bucket").notNull(),
 
   mimeType: varchar("mime_type", {
     length: 100,

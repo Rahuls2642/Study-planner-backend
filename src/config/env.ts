@@ -23,6 +23,12 @@ const envSchema = z.object({
         "7d",
         "30d",
     ]),
+
+    AWS_ENDPOINT_URL_S3: z.string().url(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
+    AWS_REGION: z.string(),
+    AWS_BUCKET: z.string(),
 });
 
 export const env = envSchema.parse(process.env);
