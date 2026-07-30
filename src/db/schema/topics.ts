@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   uuid,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 import { courses } from "./courses";
@@ -20,6 +21,10 @@ export const topics = pgTable("topics", {
   title: text("title").notNull(),
 
   order: integer("order").notNull(),
+
+  completed: boolean("completed")
+    .default(false)
+    .notNull(),
 
   createdAt: timestamp("created_at")
     .defaultNow()
