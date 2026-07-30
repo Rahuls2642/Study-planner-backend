@@ -52,3 +52,35 @@ export const getCourse = asyncHandler(
     );
   }
 );
+
+export const updateCourse = asyncHandler(
+  async (req: Request, res: Response) => {
+    const course = await courseService.update(
+      req.params.id,
+      req.user!.userId,
+      req.body
+    );
+
+    sendResponse(
+      res,
+      200,
+      "Course updated successfully",
+      course
+    );
+  }
+);
+
+export const deleteCourse = asyncHandler(
+  async (req: Request, res: Response) => {
+    await courseService.delete(
+      req.params.id,
+      req.user!.userId
+    );
+
+    sendResponse(
+      res,
+      200,
+      "Course deleted successfully"
+    );
+  }
+);

@@ -37,6 +37,42 @@ class CourseRepository {
       ),
     });
   }
+
+  async update(
+    id: string,
+    userId: string,
+    data: Partial<typeof courses.$inferInsert>
+  ) {
+    const [course] = await db
+      .update(courses)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(courses.id, id),
+          eq(courses.userId, userId)
+        )
+      )
+      .returning();
+
+    return course;
+  }
+
+  async delete(id: string, userId: string) {
+    const [course] = await db
+      .delete(courses)
+      .where(
+        and(
+          eq(courses.id, id),
+          eq(courses.userId, userId)
+        )
+      )
+      .returning();
+
+    return course;
+  }
 }
 
 export const courseRepository = new CourseRepository();

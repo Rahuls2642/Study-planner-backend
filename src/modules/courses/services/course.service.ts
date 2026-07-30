@@ -1,5 +1,6 @@
 import { CreateCourseInput } from "../validations/create-course.validation";
 import { GetCoursesQuery } from "../validations/get-courses.validation";
+import { UpdateCourseInput } from "../validations/update-course.validation";
 
 import { ApiError } from "@/config/utils/ApiError";
 
@@ -55,6 +56,45 @@ class CourseService {
     }
 
     return toCourseResponse(course);
+  }
+
+  async update(
+    id: string,
+    userId: string,
+    data: UpdateCourseInput
+  ) {
+    const course = await courseRepository.update(
+      id,
+      userId,
+      data
+    );
+
+    if (!course) {
+      throw new ApiError(
+        404,
+        "Course not found"
+      );
+    }
+
+    return toCourseResponse(course);
+  }
+
+  async delete(
+    id: string,
+    userId: string
+  ) {
+    const deletedCourse =
+      await courseRepository.delete(
+        id,
+        userId
+      );
+
+    if (!deletedCourse) {
+      throw new ApiError(
+        404,
+        "Course not found"
+      );
+    }
   }
 }
 
