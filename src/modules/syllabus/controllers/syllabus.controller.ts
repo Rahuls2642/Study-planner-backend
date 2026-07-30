@@ -1,23 +1,14 @@
 import { Request, Response } from "express";
-import { asyncHandler } from "@/config/utils/asyncHandler";
 import { sendResponse } from "@/config/utils/apiResponse";
+import { asyncHandler } from "@/config/utils/asyncHandler";
 import { ApiError } from "@/config/utils/ApiError";
-import { validateFileBuffer } from "@/config/utils/fileValidation";
-import { analyzeSyllabusService } from "../services/analyzeSyllabus.service";
+import { uploadSyllabusService } from "../services/uploadSyllabus.service";
+import { confirmSyllabusService } from "../services/confirmSyllabus.service";
 
 export const uploadSyllabus =
   asyncHandler(async (req: Request, res: Response) => {
-    if (!req.file) {
-      throw new ApiError(
-        400,
-        "File is required"
-      );
-    }
-
-    validateFileBuffer(req.file);
-
     const data =
-      await analyzeSyllabusService.execute(
+      await uploadSyllabusService.execute(
         req.params.courseId,
         req.user!.userId,
         req.file
@@ -26,7 +17,22 @@ export const uploadSyllabus =
     sendResponse(
       res,
       200,
-      "Syllabus analyzed successfully",
+      "Syllabus analyzed successfully.",
+      data
+    );
+  });
+
+export const confirmSyllabus =
+  asyncHandler(async (req: Request, res: Response) => {
+    const data =
+      await confirmSyllabusService.execute(
+        req.body
+      );
+
+    sendResponse(
+      res,
+      200,
+      "Extraction confirmed successfully.",
       data
     );
   });

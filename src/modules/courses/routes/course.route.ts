@@ -11,6 +11,7 @@ import {
   deleteCourse,
 } from "../controllers/course.controller";
 import studyPlanRoutes from "@/modules/study-plans/routes/study-plan.routes";
+import syllabusRoutes from "@/modules/syllabus/routes/syllabus.route";
 
 import { createCourseSchema } from "../validations/create-course.validation";
 import { getCoursesSchema } from "../validations/get-courses.validation";
@@ -165,6 +166,11 @@ router.delete(
 router.use(
   "/:courseId/study-plan",
   studyPlanRoutes
+);
+
+router.use(
+  "/:courseId/syllabus",
+  syllabusRoutes
 );
 
 export default router;

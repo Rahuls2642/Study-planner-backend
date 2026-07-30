@@ -3,7 +3,7 @@ import { geminiService } from "@/services/ai/gemini.service";
 import { pdfService } from "@/services/pdf/pdf.service";
 import { ApiError } from "@/config/utils/ApiError";
 
-class AnalyzeSyllabusService {
+class UploadSyllabusService {
   async execute(
     courseId: string,
     userId: string,
@@ -32,10 +32,10 @@ class AnalyzeSyllabusService {
     console.log("✓ AI response received");
 
     return {
-      syllabusText: extractedText,
+      rawText: extractedText,
       ...aiResult,
     };
   }
 }
 
-export const analyzeSyllabusService = new AnalyzeSyllabusService();
+export const uploadSyllabusService = new UploadSyllabusService();
