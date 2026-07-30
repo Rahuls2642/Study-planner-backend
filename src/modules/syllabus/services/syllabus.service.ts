@@ -17,37 +17,46 @@ class SyllabusService {
       userId
     );
 
+    console.log("Uploading to Neon Storage...");
     const uploaded =
       await storageService.upload(
         file,
         `courses/${courseId}/syllabus`
       );
+    console.log("✓ Upload successful");
 
+    console.log("Extracting PDF...");
     let extractedText = null;
     if (file.mimetype === "application/pdf") {
       extractedText = await pdfService.extract(file.buffer);
     }
+    console.log("✓ Text extracted");
+    
+    console.log("========== EXTRACTED TEXT ==========");
+    console.log(extractedText);
+    console.log("===================================");
 
     const syllabus =
       await syllabusRepository.create({
         courseId,
-
         fileName: file.originalname,
-
         storageKey: uploaded.storageKey,
-
         bucket: uploaded.bucket,
-
         mimeType: file.mimetype,
-        
         extractedText,
-        
         aiProcessed: false,
       });
 
     if (extractedText) {
+      console.log("Calling Gemini...");
       const aiResult = await geminiService.analyzeSyllabus(extractedText);
+      console.log("✓ AI response received");
+      
+      console.log(
+          JSON.stringify(aiResult, null, 2)
+      );
 
+      console.log("Saving Topics...");
       await topicRepository.createMany(
         aiResult.topics.map((topic) => ({
           courseId,
@@ -55,7 +64,9 @@ class SyllabusService {
           order: topic.order,
         }))
       );
+      console.log(`✓ Saved ${aiResult.topics.length} topics`);
 
+      console.log("Saving Assessments...");
       await assessmentRepository.createMany(
         aiResult.assessments.map((a) => ({
           courseId,
@@ -63,9 +74,12 @@ class SyllabusService {
           examDate: a.date,
         }))
       );
+      console.log(`✓ Saved ${aiResult.assessments.length} assessments`);
 
+      console.log("Updating syllabus...");
       await syllabusRepository.markProcessed(syllabus.id);
       syllabus.aiProcessed = true;
+      console.log("✓ aiProcessed = true");
     }
 
     return toSyllabusResponse(
