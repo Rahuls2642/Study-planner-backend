@@ -1,16 +1,23 @@
 import { Response } from "express";
 
-export class CookieService {
-    static setRefreshToken(res: Response, token: string) {
+import { env } from "@/config/env";
+
+class CookieService {
+    setRefreshToken(
+        res: Response,
+        token: string
+    ) {
         res.cookie("refreshToken", token, {
             httpOnly: true,
-            secure: false,
+            secure: env.NODE_ENV === "production",
             sameSite: "lax",
-            maxAge: 1000 * 60 * 60 * 24 * 7,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
     }
 
-    static clearRefreshToken(res: Response) {
+    clearRefreshToken(res: Response) {
         res.clearCookie("refreshToken");
     }
 }
+
+export const cookieService = new CookieService();

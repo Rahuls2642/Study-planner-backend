@@ -11,6 +11,7 @@ export const validate =
         body: req.body,
         params: req.params,
         query: req.query,
+        cookies: req.cookies,
       });
 
       req.body = validated.body;

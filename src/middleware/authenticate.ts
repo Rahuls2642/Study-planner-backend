@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { ApiError } from "@/config/utils/ApiError";
-import { TokenService } from "@/modules/auth/services/token.service";
+import { tokenService } from "@/modules/auth/services/token.service";
 
 declare global {
     namespace Express {
@@ -28,7 +28,7 @@ export const authenticate = (
     try {
         const token = authHeader.split(" ")[1];
 
-        const payload = TokenService.verifyAccessToken(token) as {
+        const payload = tokenService.verifyAccessToken(token) as {
             userId: string;
             email: string;
         };

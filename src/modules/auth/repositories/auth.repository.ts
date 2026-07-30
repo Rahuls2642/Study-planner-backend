@@ -21,6 +21,12 @@ export class AuthRepository extends BaseRepository {
 
         return user;
     }
+
+    async findById(id: string) {
+        return db.query.users.findFirst({
+            where: eq(users.id, id),
+        });
+    }
 }
 
 export const authRepository = new AuthRepository();

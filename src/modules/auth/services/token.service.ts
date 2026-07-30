@@ -1,46 +1,43 @@
-import { v4 as uuid } from "uuid";
-import jwt, { Secret, SignOptions } from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
 import { env } from "@/config/env";
 
-export interface JwtPayload {
-    userId: string;
-    email: string;
+class TokenService {
+  generateAccessToken(user: { id: string; email: string }) {
+    return jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+      },
+      env.JWT_ACCESS_SECRET,
+      {
+        expiresIn: env.ACCESS_TOKEN_EXPIRES_IN,
+      }
+    );
+  }
+
+  generateRefreshToken(
+    userId: string,
+    sessionId: string
+  ) {
+    return jwt.sign(
+      {
+        userId,
+        sessionId,
+      },
+      env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: env.REFRESH_TOKEN_EXPIRES_IN,
+      }
+    );
+  }
+
+  verifyRefreshToken(token: string): JwtPayload {
+    return jwt.verify(
+      token,
+      env.JWT_REFRESH_SECRET
+    ) as JwtPayload;
+  }
 }
-const createToken = (
-    payload: object,
-    secret: Secret,
-    expiresIn: SignOptions["expiresIn"]
-) => {
-    return jwt.sign(payload, secret, {
-        expiresIn,
-    });
-};
 
-export class TokenService {
-    static generateAccessToken(payload: JwtPayload) {
-        return createToken(
-            payload,
-            env.JWT_ACCESS_SECRET,
-            env.ACCESS_TOKEN_EXPIRES_IN as SignOptions["expiresIn"]
-        );
-    }
-
-    static generateRefreshToken(payload: JwtPayload) {
-        return createToken(
-            {
-                ...payload,
-                jti: uuid(),
-            },
-            env.JWT_REFRESH_SECRET,
-            env.REFRESH_TOKEN_EXPIRES_IN as SignOptions["expiresIn"]
-        );
-    }
-
-    static verifyAccessToken(token: string) {
-        return jwt.verify(token, env.JWT_ACCESS_SECRET);
-    }
-
-    static verifyRefreshToken(token: string) {
-        return jwt.verify(token, env.JWT_REFRESH_SECRET);
-    }
-}
+export const tokenService = new TokenService();
