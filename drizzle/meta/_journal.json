@@ -15,6 +15,13 @@
       "when": 1785324075626,
       "tag": "0001_shiny_ultron",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785394769891,
+      "tag": "0002_thankful_roland_deschain",
+      "breakpoints": true
     }
   ]
 }
