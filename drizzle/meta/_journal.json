@@ -36,6 +36,13 @@
       "when": 1785400109603,
       "tag": "0004_woozy_zarda",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1785404541988,
+      "tag": "0005_soft_norrin_radd",
+      "breakpoints": true
     }
   ]
 }

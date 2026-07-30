@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { notFound } from "./middleware/notFound";
 import { errorHandler } from "./middleware/errorHandler";
+import testRoutes from "@/modules/test/test.route";
 import routes from "./routes";
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 app.use("/api/v1", routes);
+app.use("/api/v1/test", testRoutes);
 app.get("/", (_, res) => {
     res.json({
         success: true,

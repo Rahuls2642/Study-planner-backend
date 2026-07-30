@@ -4,6 +4,8 @@ import { users } from "./users";
 import { sessions } from "./sessions";
 import { courses } from "./courses";
 import { syllabi } from "./syllabi";
+import { topics } from "./topics";
+import { assessments } from "./assessments";
 
 export const usersRelations = relations(users, ({ many }) => ({
     sessions: many(sessions),
@@ -28,6 +30,8 @@ export const coursesRelations = relations(
             references: [users.id],
         }),
         syllabi: many(syllabi),
+        topics: many(topics),
+        assessments: many(assessments),
     })
 );
 
@@ -40,3 +44,21 @@ export const syllabiRelations = relations(
     }),
   })
 );
+
+export const topicsRelations = relations(
+  topics,
+  ({ one }) => ({
+    course: one(courses, {
+      fields: [topics.courseId],
+      references: [courses.id],
+    }),
+  })
+);
+
+export const assessmentsRelations =
+  relations(assessments, ({ one }) => ({
+    course: one(courses, {
+      fields: [assessments.courseId],
+      references: [courses.id],
+    }),
+  }));

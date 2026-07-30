@@ -1,4 +1,5 @@
 import { db } from "@/db";
+import { eq } from "drizzle-orm";
 import { syllabi } from "@/db/schema";
 
 class SyllabusRepository {
@@ -9,6 +10,16 @@ class SyllabusRepository {
       .returning();
 
     return record;
+  }
+
+  async markProcessed(id: string) {
+    await db
+      .update(syllabi)
+      .set({
+        aiProcessed: true,
+        updatedAt: new Date(),
+      })
+      .where(eq(syllabi.id, id));
   }
 }
 
