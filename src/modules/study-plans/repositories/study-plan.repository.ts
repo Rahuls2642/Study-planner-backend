@@ -1,7 +1,17 @@
-import { and, asc, eq, gte, lt, count } from "drizzle-orm";
+import { and, asc, eq, gte, lt, count, inArray } from "drizzle-orm";
 
 import { db } from "@/db";
 import { studyPlans, courses } from "@/db/schema";
+
+export interface TodayStudyPlan {
+  id: string;
+  courseId: string;
+  courseName: string;
+  topicId: string;
+  topicTitle: string;
+  estimatedMinutes: number;
+  status: "PENDING" | "COMPLETED" | "SKIPPED";
+}
 
 class StudyPlanRepository {
   async create(
@@ -159,29 +169,29 @@ class StudyPlanRepository {
     startOfDay: Date,
     endOfDay: Date
   ) {
-    return db
-      .select()
-      .from(studyPlans)
-      .innerJoin(
-        courses,
-        eq(
-          studyPlans.courseId,
-          courses.id
-        )
-      )
-      .where(
+    return db.query.studyPlans.findMany({
+      where: (studyPlan, { and, gte, lt }) =>
         and(
-          eq(courses.userId, userId),
-          gte(
-            studyPlans.studyDate,
-            startOfDay
+          inArray(
+            studyPlan.courseId,
+            db
+              .select({ id: courses.id })
+              .from(courses)
+              .where(eq(courses.userId, userId))
           ),
-          lt(
-            studyPlans.studyDate,
-            endOfDay
-          )
-        )
-      );
+          gte(studyPlan.studyDate, startOfDay),
+          lt(studyPlan.studyDate, endOfDay)
+        ),
+  
+      with: {
+        topic: true,
+        course: true,
+      },
+  
+      orderBy: (studyPlan, { asc }) => [
+        asc(studyPlan.studyDate),
+      ],
+    });
   }
 }
 

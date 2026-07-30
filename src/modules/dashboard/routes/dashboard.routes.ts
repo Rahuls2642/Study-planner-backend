@@ -11,4 +11,10 @@ router.get(
   dashboardController.getOverview
 );
 
+router.get(
+  "/today",
+  authenticate,
+  dashboardController.today
+);
+
 export default router;

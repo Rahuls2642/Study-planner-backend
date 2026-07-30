@@ -18,6 +18,21 @@ class DashboardController {
       });
     }
   );
+
+  today = asyncHandler(
+    async (req: Request, res: Response) => {
+      const dashboard =
+        await dashboardService.getToday(
+          req.user.userId
+        );
+
+      res.status(200).json({
+        success: true,
+        message: "Today's dashboard fetched successfully.",
+        data: dashboard,
+      });
+    }
+  );
 }
 
 export const dashboardController =
