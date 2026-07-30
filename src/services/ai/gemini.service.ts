@@ -97,7 +97,7 @@ You are an expert academic planner.
 
 Return ONLY valid JSON.
 
-Distribute the topics into a realistic daily study schedule.
+Distribute the topics into a realistic daily study schedule starting from today (${new Date().toISOString().split('T')[0]}).
 
 Daily study time:
 ${dailyStudyMinutes} minutes
