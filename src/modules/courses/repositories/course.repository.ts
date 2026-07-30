@@ -26,7 +26,25 @@ class CourseRepository {
       .from(courses)
       .where(eq(courses.userId, userId));
 
-    return { data, total: Number(count) };
+    return {
+      data,
+      meta: {
+        total: Number(count),
+        page: Math.floor(offset / limit) + 1,
+        limit,
+      },
+    };
+  }
+
+  async countByUser(userId: string) {
+    const [{ count }] = await db
+      .select({
+        count: sql<number>`count(*)`,
+      })
+      .from(courses)
+      .where(eq(courses.userId, userId));
+  
+    return Number(count);
   }
 
   async findById(id: string, userId: string) {

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { topics, courses } from "@/db/schema";
-import { InferInsertModel, eq } from "drizzle-orm";
+import { InferInsertModel, eq, count, and, sql } from "drizzle-orm";
 
 export class TopicRepository {
   async createMany(data: InferInsertModel<typeof topics>[]) {
@@ -38,6 +38,27 @@ export class TopicRepository {
         asc(topic.order),
       ],
     });
+  }
+
+  async getStatsByUser(userId: string) {
+    const result = await db
+      .select({
+        total: count(),
+        completed: sql<number>`
+          COUNT(*) FILTER (WHERE ${topics.completed}=true)
+        `,
+      })
+      .from(topics)
+      .innerJoin(
+        courses,
+        eq(topics.courseId, courses.id)
+      )
+      .where(eq(courses.userId, userId));
+  
+    return {
+      total: Number(result[0].total),
+      completed: Number(result[0].completed),
+    };
   }
 }
 

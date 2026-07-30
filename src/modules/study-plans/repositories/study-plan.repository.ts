@@ -1,7 +1,7 @@
-import { and, asc, eq, gte } from "drizzle-orm";
+import { and, asc, eq, gte, count } from "drizzle-orm";
 
 import { db } from "@/db";
-import { studyPlans } from "@/db/schema";
+import { studyPlans, courses } from "@/db/schema";
 
 class StudyPlanRepository {
   async create(
@@ -100,6 +100,48 @@ class StudyPlanRepository {
       .returning();
 
     return plan;
+  }
+
+  async getStatsByUser(userId: string) {
+    const rows = await db
+      .select({
+        status: studyPlans.status,
+        count: count(),
+      })
+      .from(studyPlans)
+      .innerJoin(
+        courses,
+        eq(
+          studyPlans.courseId,
+          courses.id
+        )
+      )
+      .where(eq(courses.userId, userId))
+      .groupBy(studyPlans.status);
+  
+    const stats = {
+      total: 0,
+      completed: 0,
+      pending: 0,
+      skipped: 0,
+    };
+  
+    for (const row of rows) {
+      const value = Number(row.count);
+  
+      stats.total += value;
+  
+      if (row.status === "COMPLETED")
+        stats.completed = value;
+  
+      if (row.status === "PENDING")
+        stats.pending = value;
+  
+      if (row.status === "SKIPPED")
+        stats.skipped = value;
+    }
+  
+    return stats;
   }
 
   async findById(id: string) {

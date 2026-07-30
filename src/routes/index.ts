@@ -4,6 +4,7 @@ import { authRoutes } from "@/modules/auth";
 import { courseRoutes } from "@/modules/courses";
 import { syllabusRoutes } from "@/modules/syllabus";
 import { topicRoutes } from "@/modules/topics";
+import dashboardRoutes from "@/modules/dashboard/routes/dashboard.routes";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use("/auth", authRoutes);
 router.use("/courses", courseRoutes);
 router.use("/syllabus", syllabusRoutes);
 router.use("/topics", topicRoutes);
+router.use("/dashboard", dashboardRoutes);
 
 export default router;
