@@ -5,7 +5,33 @@ import { generateStudyPlanSchema } from "../validators/generate-study-plan.schem
 import { updateStudyPlanStatusSchema } from "../validators/update-study-plan-status.schema";
 import { studyPlanController } from "../controllers/study-plan.controller";
 
+/**
+ * @swagger
+ * tags:
+ *   name: Study Plans
+ *   description: Study plan generation and management
+ */
+
 const router = Router({ mergeParams: true });
+
+/**
+ * @swagger
+ * /api/v1/courses/{courseId}/study-plan:
+ *   get:
+ *     summary: Get the study plan for a course
+ *     tags: [Study Plans]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Study plan details
+ */
 
 router.get(
   "/",
@@ -13,6 +39,35 @@ router.get(
   studyPlanController.get
 );
 
+/**
+ * @swagger
+ * /api/v1/courses/{courseId}/study-plan/generate:
+ *   post:
+ *     summary: Generate a study plan using AI
+ *     tags: [Study Plans]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               dailyStudyMinutes:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Study plan generated
+ *       400:
+ *         description: Bad request
+ */
 router.post(
   "/generate",
   authenticate,
@@ -20,6 +75,41 @@ router.post(
   studyPlanController.generate
 );
 
+/**
+ * @swagger
+ * /api/v1/courses/{courseId}/study-plan/{planId}/status:
+ *   patch:
+ *     summary: Update study plan task status
+ *     tags: [Study Plans]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: planId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, COMPLETED, SKIPPED]
+ *     responses:
+ *       200:
+ *         description: Status updated
+ *       400:
+ *         description: Bad request
+ */
 router.patch(
   "/:planId/status",
   authenticate,
