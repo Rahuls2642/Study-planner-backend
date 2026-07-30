@@ -9,6 +9,26 @@ import { courseRepository } from "../repositories/course.repository";
 import { toCourseResponse } from "../mappers/course.mapper";
 
 class CourseService {
+  async findOwnedCourse(
+    courseId: string,
+    userId: string
+  ) {
+    const course =
+      await courseRepository.findById(
+        courseId,
+        userId
+      );
+
+    if (!course) {
+      throw new ApiError(
+        404,
+        "Course not found"
+      );
+    }
+
+    return course;
+  }
+
   async create(
     userId: string,
     data: CreateCourseInput

@@ -6,6 +6,8 @@ export const storageClient = new S3Client({
   region: env.AWS_REGION,
 
   endpoint: env.AWS_ENDPOINT_URL_S3,
+  
+  forcePathStyle: true,
 
   credentials: {
     accessKeyId: env.AWS_ACCESS_KEY_ID,
