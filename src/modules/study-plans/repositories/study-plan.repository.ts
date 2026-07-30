@@ -1,4 +1,4 @@
-import { and, asc, eq, gte, count } from "drizzle-orm";
+import { and, asc, eq, gte, lt, count } from "drizzle-orm";
 
 import { db } from "@/db";
 import { studyPlans, courses } from "@/db/schema";
@@ -152,6 +152,36 @@ class StudyPlanRepository {
         course: true,
       },
     });
+  }
+
+  async findTodayByUser(
+    userId: string,
+    startOfDay: Date,
+    endOfDay: Date
+  ) {
+    return db
+      .select()
+      .from(studyPlans)
+      .innerJoin(
+        courses,
+        eq(
+          studyPlans.courseId,
+          courses.id
+        )
+      )
+      .where(
+        and(
+          eq(courses.userId, userId),
+          gte(
+            studyPlans.studyDate,
+            startOfDay
+          ),
+          lt(
+            studyPlans.studyDate,
+            endOfDay
+          )
+        )
+      );
   }
 }
 

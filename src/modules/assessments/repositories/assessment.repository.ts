@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { assessments, courses } from "@/db/schema";
-import { InferInsertModel, eq, asc, count, gte, and } from "drizzle-orm";
+import { InferInsertModel, eq, asc, count, gte, and, lt } from "drizzle-orm";
 
 export class AssessmentRepository {
   async createMany(data: InferInsertModel<typeof assessments>[]) {
@@ -41,6 +41,38 @@ export class AssessmentRepository {
       );
   
     return Number(total);
+  }
+
+  async findUpcomingByUser(
+    userId: string,
+    endDate: Date
+  ) {
+    const todayStr = new Date().toISOString().split("T")[0];
+    const endDateStr = endDate.toISOString().split("T")[0];
+
+    return db
+      .select()
+      .from(assessments)
+      .innerJoin(
+        courses,
+        eq(
+          assessments.courseId,
+          courses.id
+        )
+      )
+      .where(
+        and(
+          eq(courses.userId, userId),
+          gte(
+            assessments.examDate,
+            todayStr
+          ),
+          lt(
+            assessments.examDate,
+            endDateStr
+          )
+        )
+      );
   }
 }
 
