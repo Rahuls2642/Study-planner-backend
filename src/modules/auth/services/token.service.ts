@@ -38,6 +38,13 @@ class TokenService {
       env.JWT_REFRESH_SECRET
     ) as JwtPayload;
   }
+
+  verifyAccessToken(token: string): JwtPayload {
+    return jwt.verify(
+      token,
+      env.JWT_ACCESS_SECRET
+    ) as JwtPayload;
+  }
 }
 
 export const tokenService = new TokenService();

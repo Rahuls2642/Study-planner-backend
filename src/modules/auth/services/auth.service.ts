@@ -138,6 +138,21 @@ export class AuthService {
 
         return;
     }
+
+    async me(userId: string) {
+        const user = await authRepository.findById(userId);
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            isVerified: user.isVerified,
+        };
+    }
 }
 
 export const authService = new AuthService();

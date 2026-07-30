@@ -58,3 +58,9 @@ export const logout = asyncHandler(async (req, res) => {
 
     sendResponse(res, 200, "Logged out successfully");
 });
+
+export const me = asyncHandler(async (req, res) => {
+    const user = await authService.me(req.user!.userId);
+
+    sendResponse(res, 200, "User fetched successfully", user);
+});
