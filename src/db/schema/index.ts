@@ -5,3 +5,4 @@ export * from "./courses";
 export * from "./syllabi";
 export * from "./topics";
 export * from "./assessments";
+export * from "./study-plans";
