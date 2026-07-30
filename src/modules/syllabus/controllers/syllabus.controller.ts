@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { asyncHandler } from "@/config/utils/asyncHandler";
 import { sendResponse } from "@/config/utils/apiResponse";
 import { ApiError } from "@/config/utils/ApiError";
-import { syllabusService } from "../services/syllabus.service";
 import { validateFileBuffer } from "@/config/utils/fileValidation";
+import { analyzeSyllabusService } from "../services/analyzeSyllabus.service";
 
 export const uploadSyllabus =
   asyncHandler(async (req: Request, res: Response) => {
@@ -16,8 +16,8 @@ export const uploadSyllabus =
 
     validateFileBuffer(req.file);
 
-    const syllabus =
-      await syllabusService.upload(
+    const data =
+      await analyzeSyllabusService.execute(
         req.params.courseId,
         req.user!.userId,
         req.file
@@ -25,8 +25,8 @@ export const uploadSyllabus =
 
     sendResponse(
       res,
-      201,
-      "Syllabus uploaded successfully",
-      syllabus
+      200,
+      "Syllabus analyzed successfully",
+      data
     );
   });

@@ -18,7 +18,7 @@ router.use(authenticate);
  * @swagger
  * /api/v1/syllabus/{courseId}:
  *   post:
- *     summary: Upload a syllabus PDF
+ *     summary: Analyze a syllabus PDF without saving (Preview)
  *     tags: [Syllabus]
  *     security:
  *       - bearerAuth: []
@@ -40,7 +40,7 @@ router.use(authenticate);
  *                 format: binary
  *     responses:
  *       200:
- *         description: Syllabus uploaded and parsed
+ *         description: Syllabus analyzed and preview returned
  *       400:
  *         description: Bad request
  */
