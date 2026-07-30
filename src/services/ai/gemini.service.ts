@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { env } from "@/config/env";
 import { ApiError } from "../../config/utils/ApiError";
 import { syllabusAiSchema } from "@/modules/syllabus/validators/ai-response.schema";
+import { studyPlanAiSchema } from "@/modules/study-plans/validators/study-plan-ai.schema";
 
 const ai = new GoogleGenAI({
   apiKey: env.GEMINI_API_KEY,
@@ -56,6 +57,100 @@ ${text}
       throw new ApiError(
         500,
         "Failed to parse Gemini response."
+      );
+    }
+  }
+
+  async generateStudyPlan(
+    topics: {
+      id: string;
+      title: string;
+      order: number;
+    }[],
+    assessments: {
+      title: string;
+      examDate: string | null;
+    }[],
+    dailyStudyMinutes: number
+  ) {
+    const topicList = JSON.stringify(
+      topics.map((topic, index) => ({
+        index: index + 1,
+        title: topic.title,
+      })),
+      null,
+      2
+    );
+
+    const assessmentList =
+      assessments.length === 0
+        ? "No upcoming assessments."
+        : assessments
+            .map(
+              (assessment) =>
+                `- ${assessment.title} (${assessment.examDate ?? "No Date"})`
+            )
+            .join("\n");
+
+    const prompt = `
+You are an expert academic planner.
+
+Return ONLY valid JSON.
+
+Distribute the topics into a realistic daily study schedule.
+
+Daily study time:
+${dailyStudyMinutes} minutes
+
+Topics (Match using "index" mapped to "topicIndex"):
+${topicList}
+
+Upcoming assessments:
+${assessmentList}
+
+Rules:
+
+- Study every day.
+- Keep daily workload balanced.
+- Include revision if appropriate.
+- Do NOT invent new topics.
+- Return only JSON.
+
+JSON Schema:
+
+{
+  "days":[
+    {
+      "date":"2026-08-01",
+      "tasks":[
+        {
+          "topicIndex": 1,
+          "estimatedMinutes": 60
+        }
+      ]
+    }
+  ]
+}
+`;
+
+    const response =
+      await ai.models.generateContent({
+        model: "gemini-3.1-flash-lite",
+        contents: prompt,
+        config: {
+          responseMimeType:
+            "application/json",
+        },
+      });
+
+    try {
+      return studyPlanAiSchema.parse(
+        JSON.parse(response.text ?? "{}")
+      );
+    } catch {
+      throw new ApiError(
+        500,
+        "Failed to parse study plan response."
       );
     }
   }

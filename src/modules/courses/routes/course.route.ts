@@ -10,6 +10,7 @@ import {
   updateCourse,
   deleteCourse,
 } from "../controllers/course.controller";
+import studyPlanRoutes from "@/modules/study-plans/routes/study-plan.routes";
 
 import { createCourseSchema } from "../validations/create-course.validation";
 import { getCoursesSchema } from "../validations/get-courses.validation";
@@ -42,6 +43,11 @@ router.patch(
 router.delete(
   "/:id",
   deleteCourse
+);
+
+router.use(
+  "/:courseId/study-plan",
+  studyPlanRoutes
 );
 
 export default router;

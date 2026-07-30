@@ -26,6 +26,19 @@ export class TopicRepository {
 
     return topic;
   }
+
+  async findIncompleteByCourse(courseId: string) {
+    return db.query.topics.findMany({
+      where: (topic, { and, eq }) =>
+        and(
+          eq(topic.courseId, courseId),
+          eq(topic.completed, false)
+        ),
+      orderBy: (topic, { asc }) => [
+        asc(topic.order),
+      ],
+    });
+  }
 }
 
 export const topicRepository = new TopicRepository();
