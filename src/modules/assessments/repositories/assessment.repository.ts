@@ -3,9 +3,14 @@ import { assessments, courses } from "@/db/schema";
 import { InferInsertModel, eq, asc, count, gte, and, lt } from "drizzle-orm";
 
 export class AssessmentRepository {
-  async createMany(data: InferInsertModel<typeof assessments>[]) {
+  async createMany(data: InferInsertModel<typeof assessments>[], tx = db) {
     if (data.length === 0) return [];
-    return db.insert(assessments).values(data).returning();
+    return tx.insert(assessments).values(data).returning();
+  }
+
+  async create(data: InferInsertModel<typeof assessments>, tx = db) {
+    const [record] = await tx.insert(assessments).values(data).returning();
+    return record;
   }
 
   async findByCourse(courseId: string) {

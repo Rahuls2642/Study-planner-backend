@@ -3,9 +3,14 @@ import { topics, courses } from "@/db/schema";
 import { InferInsertModel, eq, count, and, sql } from "drizzle-orm";
 
 export class TopicRepository {
-  async createMany(data: InferInsertModel<typeof topics>[]) {
+  async createMany(data: InferInsertModel<typeof topics>[], tx = db) {
     if (data.length === 0) return [];
-    return db.insert(topics).values(data).returning();
+    return tx.insert(topics).values(data).returning();
+  }
+
+  async create(data: InferInsertModel<typeof topics>, tx = db) {
+    const [record] = await tx.insert(topics).values(data).returning();
+    return record;
   }
 
   async findByIdWithCourse(id: string) {

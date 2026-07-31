@@ -14,20 +14,26 @@ export const validate =
         cookies: req.cookies,
       });
 
-      req.body = validated.body;
+      if (validated.body !== undefined) req.body = validated.body;
       
       // In Express 5, req.query and req.params might be getters
-      Object.defineProperty(req, 'query', {
-        value: validated.query,
-        writable: true,
-        configurable: true
-      });
+      if (validated.query !== undefined) {
+        Object.defineProperty(req, 'query', {
+          value: validated.query,
+          writable: true,
+          configurable: true
+        });
+      }
       
-      Object.defineProperty(req, 'params', {
-        value: validated.params,
-        writable: true,
-        configurable: true
-      });
+      if (validated.params !== undefined) {
+        Object.defineProperty(req, 'params', {
+          value: validated.params,
+          writable: true,
+          configurable: true
+        });
+      }
+      
+      if (validated.cookies !== undefined) req.cookies = validated.cookies;
 
       next();
     } catch (error) {

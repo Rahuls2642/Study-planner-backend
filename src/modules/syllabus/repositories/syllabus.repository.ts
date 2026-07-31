@@ -3,8 +3,8 @@ import { eq } from "drizzle-orm";
 import { syllabi } from "@/db/schema";
 
 class SyllabusRepository {
-  async create(data: typeof syllabi.$inferInsert) {
-    const [record] = await db
+  async create(data: typeof syllabi.$inferInsert, tx = db) {
+    const [record] = await tx
       .insert(syllabi)
       .values(data)
       .returning();

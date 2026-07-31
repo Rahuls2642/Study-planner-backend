@@ -24,15 +24,15 @@ export const uploadSyllabus =
 
 export const confirmSyllabus =
   asyncHandler(async (req: Request, res: Response) => {
-    const data =
-      await confirmSyllabusService.execute(
-        req.body
-      );
+    await confirmSyllabusService.execute(
+      req.params.courseId,
+      req.user!.userId,
+      req.body
+    );
 
     sendResponse(
       res,
       200,
-      "Extraction confirmed successfully.",
-      data
+      "Extraction confirmed successfully."
     );
   });
