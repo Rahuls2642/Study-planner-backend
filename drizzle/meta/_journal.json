@@ -85,6 +85,13 @@
       "when": 1785475695792,
       "tag": "0011_colorful_gateway",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1785476570044,
+      "tag": "0012_left_the_anarchist",
+      "breakpoints": true
     }
   ]
 }

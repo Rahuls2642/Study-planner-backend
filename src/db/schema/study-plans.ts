@@ -45,6 +45,10 @@ export const studyPlans = pgTable(
             "estimated_minutes"
         ).notNull(),
 
+        part: integer("part").notNull().default(1),
+
+        totalParts: integer("total_parts").notNull().default(1),
+
         status: studyPlanStatusEnum(
             "status"
         )

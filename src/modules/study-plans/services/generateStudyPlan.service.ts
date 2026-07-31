@@ -6,6 +6,7 @@ import { studyPlanRepository } from "@/modules/study-plans/repositories/study-pl
 import { db } from "@/db";
 import { generateStudySessions } from "../utils/generateStudySessions";
 import { assignTopicsToSessions } from "../utils/assignTopicsToSessions";
+import { expandTopics } from "../utils/expandTopics";
 
 class GenerateStudyPlanService {
   async execute(courseId: string, userId: string) {
@@ -40,6 +41,11 @@ class GenerateStudyPlanService {
       );
     }
 
+    const expandedTopics = expandTopics(
+      topics,
+      preference.sessionMinutes
+    );
+
     const sessions = generateStudySessions(
       {
         hoursPerDay: preference.hoursPerDay,
@@ -48,10 +54,10 @@ class GenerateStudyPlanService {
         studyDays: preference.studyDays,
         startDate: new Date(preference.startDate),
       },
-      topics.length
+      expandedTopics.length
     );
 
-    const scheduledTopics = assignTopicsToSessions(topics, sessions);
+    const scheduledTopics = assignTopicsToSessions(expandedTopics, sessions);
 
     return db.transaction(async (tx) => {
       await studyPlanRepository.deleteByCourseId(
@@ -65,6 +71,8 @@ class GenerateStudyPlanService {
         studyDate: new Date(item.date),
         sessionNumber: item.sessionNumber,
         estimatedMinutes: item.durationMinutes,
+        part: item.part,
+        totalParts: item.totalParts,
         status: "PENDING" as const,
       }));
 
