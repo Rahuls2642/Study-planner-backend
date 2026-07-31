@@ -1,39 +1,15 @@
 import { Request, Response } from "express";
-
 import { asyncHandler } from "@/config/utils/asyncHandler";
 import { dashboardService } from "../services/dashboard.service";
 
 class DashboardController {
-  getOverview = asyncHandler(
-    async (req: Request, res: Response) => {
-      const dashboard =
-        await dashboardService.getOverview(
-          req.user.userId
-        );
-
-      res.status(200).json({
-        success: true,
-        message: "Dashboard fetched successfully.",
-        data: dashboard,
-      });
-    }
-  );
-
-  today = asyncHandler(
-    async (req: Request, res: Response) => {
-      const dashboard =
-        await dashboardService.getToday(
-          req.user.userId
-        );
-
-      res.status(200).json({
-        success: true,
-        message: "Today's dashboard fetched successfully.",
-        data: dashboard,
-      });
-    }
-  );
+  getDashboard = asyncHandler(async (req: Request, res: Response) => {
+    const data = await dashboardService.getDashboardData(req.user.userId);
+    res.json({
+      success: true,
+      data,
+    });
+  });
 }
 
-export const dashboardController =
-  new DashboardController();
+export const dashboardController = new DashboardController();
