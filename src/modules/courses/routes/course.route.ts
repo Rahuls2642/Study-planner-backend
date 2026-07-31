@@ -10,6 +10,7 @@ import {
   updateCourse,
   deleteCourse,
 } from "../controllers/course.controller";
+import { progressController } from "@/modules/progress/controllers/progress.controller";
 import studyPlanRoutes from "@/modules/study-plans/routes/study-plan.routes";
 import syllabusRoutes from "@/modules/syllabus/routes/syllabus.route";
 
@@ -172,5 +173,7 @@ router.use(
   "/:courseId/syllabus",
   syllabusRoutes
 );
+
+router.get("/:courseId/progress", progressController.getCourseProgress);
 
 export default router;
