@@ -174,6 +174,26 @@ router.use(
   syllabusRoutes
 );
 
+/**
+ * @swagger
+ * /api/v1/courses/{courseId}/progress:
+ *   get:
+ *     summary: Get progress for a specific course
+ *     tags: [Courses]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Course progress retrieved successfully
+ *       404:
+ *         description: Course not found
+ */
 router.get("/:courseId/progress", progressController.getCourseProgress);
 
 export default router;

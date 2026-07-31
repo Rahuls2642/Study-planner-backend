@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "@/config/utils/asyncHandler";
 import { createStudyPreferenceService } from "../services/createStudyPreference.service";
+import { getStudyPreferenceService } from "../services/getStudyPreference.service";
 
 class StudyPreferenceController {
   create = asyncHandler(
@@ -16,6 +17,20 @@ class StudyPreferenceController {
         success: true,
         message:
           "Study preferences saved successfully.",
+        data: preference,
+      });
+    }
+  );
+
+  get = asyncHandler(
+    async (req: Request, res: Response) => {
+      const preference = await getStudyPreferenceService.execute(
+        req.params.courseId,
+        req.user!.userId
+      );
+
+      res.status(200).json({
+        success: true,
         data: preference,
       });
     }
