@@ -57,6 +57,20 @@
       "when": 1785409686290,
       "tag": "0007_hot_silver_surfer",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1785473692227,
+      "tag": "0008_safe_marten_broadcloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1785474326380,
+      "tag": "0009_chilly_mariko_yashida",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "study_preferences" ADD CONSTRAINT "study_preferences_course_id_unique" UNIQUE("course_id");
