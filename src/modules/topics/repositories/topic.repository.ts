@@ -32,6 +32,13 @@ export class TopicRepository {
     return topic;
   }
 
+  async findByCourseId(courseId: string) {
+    return db.query.topics.findMany({
+      where: eq(topics.courseId, courseId),
+      orderBy: (topics, { asc }) => [asc(topics.order)],
+    });
+  }
+
   async findIncompleteByCourse(courseId: string) {
     return db.query.topics.findMany({
       where: (topic, { and, eq }) =>

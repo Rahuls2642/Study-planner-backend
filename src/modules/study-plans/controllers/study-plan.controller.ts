@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { asyncHandler } from "@/config/utils/asyncHandler";
-import { studyPlanService } from "../services/study-plan.service";
+import { generateStudyPlanService } from "../services/generateStudyPlan.service";
 import { getStudyPlanService } from "../services/get-study-plan.service";
 import { updateStudyPlanStatusService } from "../services/update-study-plan-status.service";
 
@@ -9,17 +9,15 @@ export class StudyPlanController {
   generate = asyncHandler(
     async (req: Request, res: Response) => {
       const plans =
-        await studyPlanService.generateStudyPlan(
-          req.user.userId, // fixed this from req.user.id based on our previous bug fix
+        await generateStudyPlanService.execute(
           req.params.courseId,
-          req.body.dailyStudyMinutes
+          req.user.userId
         );
 
       res.status(201).json({
         success: true,
         message:
           "Study plan generated successfully.",
-        data: plans,
       });
     }
   );

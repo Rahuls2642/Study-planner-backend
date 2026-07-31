@@ -1,0 +1,1 @@
+ALTER TABLE "topics" ADD COLUMN "estimated_duration_minutes" integer DEFAULT 60 NOT NULL;

@@ -32,6 +32,8 @@ class ConfirmSyllabusService {
           data.topics.map((topic, index) => ({
             courseId,
             title: topic.title,
+            description: topic.description,
+            estimatedDurationMinutes: topic.estimatedDurationMinutes,
             order: index + 1,
             completed: false,
           })),

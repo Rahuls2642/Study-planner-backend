@@ -23,13 +23,35 @@ Schema:
   "topics": [
     {
       "title": string,
-      "order": number
+      "description": string,
+      "estimatedDurationMinutes": number
     }
   ],
   "assessments": [
     {
       "title": string,
       "date": string | null
+    }
+  ]
+}
+
+Extract all study topics.
+Return JSON only.
+Each topic must contain:
+- title
+- description
+- estimatedDurationMinutes
+
+Estimate how many minutes an average student needs to study that topic thoroughly.
+Return only an integer number of minutes.
+
+Example:
+{
+  "topics":[
+    {
+      "title":"Arrays",
+      "description":"...",
+      "estimatedDurationMinutes":90
     }
   ]
 }
@@ -54,6 +76,8 @@ ${text}
       
       return parsed;
     } catch (error) {
+      console.error("Gemini Parsing Error:", error);
+      console.error("Raw Response:", response.text);
       throw new ApiError(
         500,
         "Failed to parse Gemini response."

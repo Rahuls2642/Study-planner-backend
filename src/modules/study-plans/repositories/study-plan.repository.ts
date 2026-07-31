@@ -35,6 +35,15 @@ class StudyPlanRepository {
       .returning();
   }
 
+  async deleteByCourseId(
+    courseId: string,
+    tx: any = db
+  ) {
+    await tx
+      .delete(studyPlans)
+      .where(eq(studyPlans.courseId, courseId));
+  }
+
   async findToday(
     courseId: string,
     today: Date

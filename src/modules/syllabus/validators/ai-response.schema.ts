@@ -6,7 +6,8 @@ export const syllabusAiSchema = z.object({
   topics: z.array(
     z.object({
       title: z.string(),
-      order: z.number(),
+      description: z.string(),
+      estimatedDurationMinutes: z.number().int().min(15).max(10000),
     })
   ),
 

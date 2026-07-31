@@ -7,8 +7,8 @@ export const confirmSyllabusSchema = z.object({
     topics: z.array(
       z.object({
         title: z.string().min(1),
-        difficulty: z.number().int().min(1).max(5),
-        estimatedHours: z.number().positive(),
+        description: z.string(),
+        estimatedDurationMinutes: z.number().int().min(15).max(10000),
       })
     ),
 
