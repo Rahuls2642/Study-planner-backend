@@ -208,7 +208,7 @@ class StudyPlanRepository {
   
       orderBy: (studyPlan, { asc }) => [
         asc(studyPlan.studyDate),
-        asc(studyPlan.sessionNumber),
+        asc(studyPlan.part),
       ],
     });
   }
@@ -239,7 +239,7 @@ class StudyPlanRepository {
   
       orderBy: (studyPlan, { asc }) => [
         asc(studyPlan.studyDate),
-        asc(studyPlan.sessionNumber),
+        asc(studyPlan.part),
       ],
     });
   }

@@ -25,7 +25,6 @@ class GetWeekStudyPlanService {
         id: plan.id,
         topicTitle: plan.topic.title,
         courseName: plan.course.title,
-        sessionNumber: plan.sessionNumber,
         duration: plan.estimatedMinutes,
         status: plan.status,
         part: plan.part,
