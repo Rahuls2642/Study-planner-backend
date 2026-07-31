@@ -35,6 +35,9 @@ export class TopicRepository {
   async findByCourseId(courseId: string) {
     return db.query.topics.findMany({
       where: eq(topics.courseId, courseId),
+      with: {
+        assessment: true,
+      },
       orderBy: (topics, { asc }) => [asc(topics.order)],
     });
   }

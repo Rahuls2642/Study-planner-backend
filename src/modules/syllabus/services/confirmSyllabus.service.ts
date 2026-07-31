@@ -27,6 +27,23 @@ class ConfirmSyllabusService {
         tx
       );
 
+      let savedAssessments: { id: string; title: string }[] = [];
+
+      if (data.assessments && data.assessments.length > 0) {
+        savedAssessments = await assessmentRepository.createMany(
+          data.assessments.map((a) => ({
+            courseId,
+            title: a.title,
+            examDate: a.date,
+          })),
+          tx
+        );
+      }
+
+      const assessmentMap = new Map(
+        savedAssessments.map((a) => [a.title, a.id])
+      );
+
       if (data.topics && data.topics.length > 0) {
         await topicRepository.createMany(
           data.topics.map((topic, index) => ({
@@ -34,19 +51,11 @@ class ConfirmSyllabusService {
             title: topic.title,
             description: topic.description,
             estimatedDurationMinutes: topic.estimatedDurationMinutes,
+            assessmentId: topic.assessmentTitle
+              ? assessmentMap.get(topic.assessmentTitle) ?? null
+              : null,
             order: index + 1,
             completed: false,
-          })),
-          tx
-        );
-      }
-
-      if (data.assessments && data.assessments.length > 0) {
-        await assessmentRepository.createMany(
-          data.assessments.map((a) => ({
-            courseId,
-            title: a.title,
-            examDate: a.date,
           })),
           tx
         );

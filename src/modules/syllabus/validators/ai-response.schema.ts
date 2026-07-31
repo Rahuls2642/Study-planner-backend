@@ -8,6 +8,7 @@ export const syllabusAiSchema = z.object({
       title: z.string(),
       description: z.string(),
       estimatedDurationMinutes: z.number().int().min(15).max(10000),
+      assessmentTitle: z.string().optional(),
     })
   ),
 

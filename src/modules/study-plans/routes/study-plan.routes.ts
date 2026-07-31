@@ -2,7 +2,6 @@ import { Router } from "express";
 import { authenticate } from "@/middleware/auth.middleware";
 import { validate } from "@/middleware/validate";
 import { generateStudyPlanSchema } from "../validators/generate-study-plan.schema";
-import { updateStudyPlanStatusSchema } from "../validators/update-study-plan-status.schema";
 import { studyPlanController } from "../controllers/study-plan.controller";
 
 /**
@@ -75,46 +74,5 @@ router.post(
   studyPlanController.generate
 );
 
-/**
- * @swagger
- * /api/v1/courses/{courseId}/study-plan/{planId}/status:
- *   patch:
- *     summary: Update study plan task status
- *     tags: [Study Plans]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: courseId
- *         required: true
- *         schema:
- *           type: string
- *       - in: path
- *         name: planId
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               status:
- *                 type: string
- *                 enum: [PENDING, COMPLETED, SKIPPED]
- *     responses:
- *       200:
- *         description: Status updated
- *       400:
- *         description: Bad request
- */
-router.patch(
-  "/:planId/status",
-  authenticate,
-  validate(updateStudyPlanStatusSchema),
-  studyPlanController.updateStatus
-);
 
 export default router;

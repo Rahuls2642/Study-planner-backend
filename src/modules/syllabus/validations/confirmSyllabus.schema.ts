@@ -9,6 +9,7 @@ export const confirmSyllabusSchema = z.object({
         title: z.string().min(1),
         description: z.string(),
         estimatedDurationMinutes: z.number().int().min(15).max(10000),
+        assessmentTitle: z.string().optional(),
       })
     ),
 

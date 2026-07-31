@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { courses } from "./courses";
+import { assessments } from "./assessments";
 
 export const topics = pgTable("topics", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -27,6 +28,11 @@ export const topics = pgTable("topics", {
   estimatedDurationMinutes: integer("estimated_duration_minutes")
     .notNull()
     .default(60),
+
+  assessmentId: uuid("assessment_id")
+    .references(() => assessments.id, {
+      onDelete: "set null",
+    }),
 
   completed: boolean("completed")
     .default(false)

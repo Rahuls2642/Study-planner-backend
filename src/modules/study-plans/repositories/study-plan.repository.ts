@@ -10,7 +10,7 @@ export interface TodayStudyPlan {
   topicId: string;
   topicTitle: string;
   estimatedMinutes: number;
-  status: "PENDING" | "COMPLETED" | "SKIPPED";
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "SKIPPED";
 }
 
 class StudyPlanRepository {
@@ -104,15 +104,12 @@ class StudyPlanRepository {
 
   async updateStatus(
     id: string,
-    status:
-      | "PENDING"
-      | "COMPLETED"
-      | "SKIPPED"
+    updateData: Partial<typeof studyPlans.$inferInsert>
   ) {
     const [plan] = await db
       .update(studyPlans)
       .set({
-        status,
+        ...updateData,
         updatedAt: new Date(),
       })
       .where(eq(studyPlans.id, id))
@@ -153,8 +150,8 @@ class StudyPlanRepository {
       if (row.status === "COMPLETED")
         stats.completed = value;
   
-      if (row.status === "PENDING")
-        stats.pending = value;
+      if (row.status === "PENDING" || row.status === "IN_PROGRESS")
+        stats.pending += value;
   
       if (row.status === "SKIPPED")
         stats.skipped = value;
@@ -163,9 +160,21 @@ class StudyPlanRepository {
     return stats;
   }
 
-  async findById(id: string) {
+  async findById(id: string, userId?: string) {
     return db.query.studyPlans.findFirst({
-      where: eq(studyPlans.id, id),
+      where: (studyPlan, { eq, and }) => {
+        if (!userId) return eq(studyPlan.id, id);
+        return and(
+          eq(studyPlan.id, id),
+          inArray(
+            studyPlan.courseId,
+            db
+              .select({ id: courses.id })
+              .from(courses)
+              .where(eq(courses.userId, userId))
+          )
+        );
+      },
       with: {
         topic: true,
         course: true,
@@ -199,6 +208,38 @@ class StudyPlanRepository {
   
       orderBy: (studyPlan, { asc }) => [
         asc(studyPlan.studyDate),
+        asc(studyPlan.sessionNumber),
+      ],
+    });
+  }
+
+  async findWeek(
+    userId: string,
+    startDate: Date,
+    endDate: Date
+  ) {
+    return db.query.studyPlans.findMany({
+      where: (studyPlan, { and, gte, lt }) =>
+        and(
+          inArray(
+            studyPlan.courseId,
+            db
+              .select({ id: courses.id })
+              .from(courses)
+              .where(eq(courses.userId, userId))
+          ),
+          gte(studyPlan.studyDate, startDate),
+          lt(studyPlan.studyDate, endDate)
+        ),
+  
+      with: {
+        topic: true,
+        course: true,
+      },
+  
+      orderBy: (studyPlan, { asc }) => [
+        asc(studyPlan.studyDate),
+        asc(studyPlan.sessionNumber),
       ],
     });
   }

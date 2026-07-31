@@ -54,6 +54,10 @@ export const topicsRelations = relations(
       fields: [topics.courseId],
       references: [courses.id],
     }),
+    assessment: one(assessments, {
+      fields: [topics.assessmentId],
+      references: [assessments.id],
+    }),
     studyPlans: many(studyPlans),
   })
 );

@@ -24,7 +24,8 @@ Schema:
     {
       "title": string,
       "description": string,
-      "estimatedDurationMinutes": number
+      "estimatedDurationMinutes": number,
+      "assessmentTitle": string
     }
   ],
   "assessments": [
@@ -41,6 +42,9 @@ Each topic must contain:
 - title
 - description
 - estimatedDurationMinutes
+- assessmentTitle
+
+assessmentTitle should match the assessment that primarily covers this topic.
 
 Estimate how many minutes an average student needs to study that topic thoroughly.
 Return only an integer number of minutes.
@@ -51,7 +55,8 @@ Example:
     {
       "title":"Arrays",
       "description":"...",
-      "estimatedDurationMinutes":90
+      "estimatedDurationMinutes":90,
+      "assessmentTitle":"Midterm"
     }
   ]
 }

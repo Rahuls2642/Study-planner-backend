@@ -13,6 +13,7 @@ export const studyPlanStatusEnum = pgEnum(
     "study_plan_status",
     [
         "PENDING",
+        "IN_PROGRESS",
         "COMPLETED",
         "SKIPPED",
     ]
@@ -54,6 +55,9 @@ export const studyPlans = pgTable(
         )
             .default("PENDING")
             .notNull(),
+
+        startedAt: timestamp("started_at"),
+        completedAt: timestamp("completed_at"),
 
         createdAt: timestamp(
             "created_at",

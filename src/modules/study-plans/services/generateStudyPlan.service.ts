@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { generateStudySessions } from "../utils/generateStudySessions";
 import { assignTopicsToSessions } from "../utils/assignTopicsToSessions";
 import { expandTopics } from "../utils/expandTopics";
+import { prioritizeTopics } from "../utils/prioritizeTopics";
 
 class GenerateStudyPlanService {
   async execute(courseId: string, userId: string) {
@@ -41,8 +42,10 @@ class GenerateStudyPlanService {
       );
     }
 
+    const prioritizedTopics = prioritizeTopics(topics);
+
     const expandedTopics = expandTopics(
-      topics,
+      prioritizedTopics,
       preference.sessionMinutes
     );
 
