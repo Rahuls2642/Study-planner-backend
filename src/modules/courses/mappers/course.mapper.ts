@@ -3,7 +3,7 @@ import { courses } from "@/db/schema";
 
 export type Course = InferSelectModel<typeof courses>;
 
-export const toCourseResponse = (course: Course) => ({
+export const toCourseResponse = (course: any) => ({
   id: course.id,
   title: course.title,
   code: course.code,
@@ -12,4 +12,8 @@ export const toCourseResponse = (course: Course) => ({
   color: course.color,
   createdAt: course.createdAt,
   updatedAt: course.updatedAt,
+  topics: course.topics || [],
+  assessments: course.assessments || [],
+  topicsCount: course.topics?.length || 0,
+  assessmentsCount: course.assessments?.length || 0,
 });

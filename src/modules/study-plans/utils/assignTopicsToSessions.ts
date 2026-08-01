@@ -15,17 +15,15 @@ export function assignTopicsToSessions(
   expandedTopics: ExpandedTopic[],
   sessions: StudySession[]
 ): ScheduledTopic[] {
-  if (expandedTopics.length > sessions.length) {
-    throw new Error(
-      "Not enough study sessions to schedule all topic parts."
-    );
-  }
+  // If there are more topics than available sessions (due to examDate cutoff),
+  // keep only as many topics as we have sessions for (they are already prioritized)
+  const topicsToSchedule = expandedTopics.slice(0, sessions.length);
 
-  return expandedTopics.map((topic, index) => ({
+  return topicsToSchedule.map((topic, index) => ({
     topicId: topic.topicId,
     title: topic.title,
     part: topic.part,
-    totalParts: topic.totalParts,
+    totalParts: topic.totalParts, // We could recalculate this, but keeping original totalParts shows it was truncated
     date: sessions[index].date,
     sessionNumber: sessions[index].sessionNumber,
     durationMinutes: sessions[index].durationMinutes,

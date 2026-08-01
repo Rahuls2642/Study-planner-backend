@@ -13,6 +13,10 @@ export class AssessmentRepository {
     return record;
   }
 
+  async deleteByCourseId(courseId: string, tx = db) {
+    return tx.delete(assessments).where(eq(assessments.courseId, courseId)).returning();
+  }
+
   async findByCourse(courseId: string) {
     return db.query.assessments.findMany({
       where: eq(assessments.courseId, courseId),

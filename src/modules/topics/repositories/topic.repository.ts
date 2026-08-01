@@ -13,6 +13,10 @@ export class TopicRepository {
     return record;
   }
 
+  async deleteByCourseId(courseId: string, tx = db) {
+    return tx.delete(topics).where(eq(topics.courseId, courseId)).returning();
+  }
+
   async findByIdWithCourse(id: string) {
     const [topic] = await db.select().from(topics).where(eq(topics.id, id));
     if (!topic) return null;

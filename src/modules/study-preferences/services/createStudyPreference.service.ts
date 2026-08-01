@@ -24,10 +24,12 @@ class CreateStudyPreferenceService {
     return studyPreferenceRepository.upsert({
       courseId,
       hoursPerDay: data.hoursPerDay,
+      minutesPerDay: data.minutesPerDay,
       sessionMinutes: data.sessionMinutes,
       breakMinutes: data.breakMinutes,
       studyDays: data.studyDays,
       startDate: data.startDate,
+      examDate: data.examDate,
     });
   }
 }

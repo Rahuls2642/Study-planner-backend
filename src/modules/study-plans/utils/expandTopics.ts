@@ -16,19 +16,28 @@ export function expandTopics(
   sessionMinutes: number
 ): ExpandedTopic[] {
   const expanded: ExpandedTopic[] = [];
+  
+  // Calculate total parts for each topic
+  const topicsWithParts = topics.map(topic => ({
+    topic,
+    totalParts: Math.ceil(topic.estimatedDurationMinutes / sessionMinutes),
+    currentPart: 1
+  }));
 
-  for (const topic of topics) {
-    const totalParts = Math.ceil(
-      topic.estimatedDurationMinutes / sessionMinutes
-    );
-
-    for (let part = 1; part <= totalParts; part++) {
-      expanded.push({
-        topicId: topic.id,
-        title: topic.title,
-        part,
-        totalParts,
-      });
+  let hasMoreParts = true;
+  while (hasMoreParts) {
+    hasMoreParts = false;
+    for (const t of topicsWithParts) {
+      if (t.currentPart <= t.totalParts) {
+        expanded.push({
+          topicId: t.topic.id,
+          title: t.topic.title,
+          part: t.currentPart,
+          totalParts: t.totalParts,
+        });
+        t.currentPart++;
+        hasMoreParts = true;
+      }
     }
   }
 

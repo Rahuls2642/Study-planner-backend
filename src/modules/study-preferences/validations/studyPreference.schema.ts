@@ -2,7 +2,8 @@ import { z } from "zod";
 
 export const createStudyPreferenceSchema = z.object({
   body: z.object({
-    hoursPerDay: z.number().int().min(1).max(12),
+    hoursPerDay: z.number().int().min(0).max(24),
+    minutesPerDay: z.number().int().min(0).max(59).optional().default(0),
 
     sessionMinutes: z
       .number()
@@ -21,6 +22,7 @@ export const createStudyPreferenceSchema = z.object({
       .min(1),
 
     startDate: z.string(),
+    examDate: z.string().optional(),
   })
 });
 

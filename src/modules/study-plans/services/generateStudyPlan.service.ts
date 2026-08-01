@@ -52,10 +52,12 @@ class GenerateStudyPlanService {
     const sessions = generateStudySessions(
       {
         hoursPerDay: preference.hoursPerDay,
+        minutesPerDay: preference.minutesPerDay,
         sessionMinutes: preference.sessionMinutes,
         breakMinutes: preference.breakMinutes,
-        studyDays: preference.studyDays,
+        studyDays: preference.studyDays as number[],
         startDate: new Date(preference.startDate),
+        examDate: preference.examDate ? new Date(preference.examDate) : null,
       },
       expandedTopics.length
     );

@@ -21,6 +21,8 @@ export const studyPreferences = pgTable("study_preferences", {
 
   hoursPerDay: integer("hours_per_day").notNull(),
 
+  minutesPerDay: integer("minutes_per_day").notNull().default(0),
+
   sessionMinutes: integer("session_minutes").notNull(),
 
   breakMinutes: integer("break_minutes").notNull(),
@@ -30,6 +32,8 @@ export const studyPreferences = pgTable("study_preferences", {
     .notNull(),
 
   startDate: date("start_date").notNull(),
+
+  examDate: date("exam_date"),
 
   createdAt: timestamp("created_at")
     .defaultNow()

@@ -19,6 +19,10 @@ class CourseRepository {
       orderBy: desc(courses.createdAt),
       limit,
       offset,
+      with: {
+        topics: true,
+        assessments: true,
+      },
     });
 
     const [{ count }] = await db
@@ -53,6 +57,10 @@ class CourseRepository {
         eq(courses.id, id),
         eq(courses.userId, userId)
       ),
+      with: {
+        topics: true,
+        assessments: true,
+      },
     });
   }
 

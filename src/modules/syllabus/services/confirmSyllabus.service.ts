@@ -29,6 +29,10 @@ class ConfirmSyllabusService {
 
       let savedAssessments: { id: string; title: string }[] = [];
 
+      // Clear existing topics and assessments for the course to prevent duplicates
+      await topicRepository.deleteByCourseId(courseId, tx);
+      await assessmentRepository.deleteByCourseId(courseId, tx);
+
       if (data.assessments && data.assessments.length > 0) {
         savedAssessments = await assessmentRepository.createMany(
           data.assessments.map((a) => ({

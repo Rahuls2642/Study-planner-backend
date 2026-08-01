@@ -47,9 +47,30 @@ class CourseService {
 
     const { data, total } =
       await courseRepository.findAllByUserId(userId, limit, offset);
+      
+    // Dynamically import to avoid circular dependencies if any, or just import at top.
+    // Assuming progressRepository can be imported or we can just fetch it here.
+    const { progressRepository } = await import("@/modules/progress/repositories/progress.repository");
+
+    const coursesWithProgress = await Promise.all(
+      data.map(async (course) => {
+        const progress = await progressRepository.getCourseProgress(course.id);
+        const totalSessions = progress.totalSessions || 0;
+        const completedSessions = progress.completedSessions || 0;
+        const completionPercentage =
+          totalSessions > 0
+            ? Math.round((completedSessions / totalSessions) * 100)
+            : 0;
+
+        return {
+          ...toCourseResponse(course),
+          progress: completionPercentage,
+        };
+      })
+    );
 
     return {
-      courses: data.map(toCourseResponse),
+      courses: coursesWithProgress,
       pagination: {
         page,
         limit,

@@ -19,6 +19,20 @@ class ProgressRepository {
     return result;
   }
 
+  async getTopicsProgress(courseId: string) {
+    return db
+      .select({
+        topicId: studyPlans.topicId,
+        totalSessions: sql<number>`count(*)`.mapWith(Number),
+        completedSessions: sql<number>`count(case when ${studyPlans.status} = 'COMPLETED' then 1 end)`.mapWith(Number),
+        totalMinutes: sql<number>`sum(${studyPlans.estimatedMinutes})`.mapWith(Number),
+        completedMinutes: sql<number>`sum(case when ${studyPlans.status} = 'COMPLETED' then ${studyPlans.estimatedMinutes} else 0 end)`.mapWith(Number),
+      })
+      .from(studyPlans)
+      .where(eq(studyPlans.courseId, courseId))
+      .groupBy(studyPlans.topicId);
+  }
+
   async getWeeklyProgress(userId: string, startDate: Date) {
     return db
       .select({
